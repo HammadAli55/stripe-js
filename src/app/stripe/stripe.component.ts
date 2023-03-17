@@ -10,6 +10,9 @@ import{ loadStripe, Stripe } from '@stripe/stripe-js'
 export class StripeComponent implements OnInit { 
 
 title = 'stripe-payment';
+personName:string = ''
+address:string = ''
+
 private stripe: Stripe;
 
 constructor() {
@@ -17,7 +20,7 @@ constructor() {
 }
 
 async ngOnInit() {
-  this.stripe = await loadStripe('Enter Publishable key')
+  this.stripe = await loadStripe('')
 
   const elements = this.stripe.elements();
   const card = elements.create('card');
@@ -31,7 +34,7 @@ async ngOnInit() {
     button.addEventListener('click', async(event)=>{
       event.preventDefault();
       const ownerInfo = {
-        owner: {name: 'hammad'},
+        owner: {name: this.personName},
         amount: 1000 * 100,
         currency: 'mxn'
       };
