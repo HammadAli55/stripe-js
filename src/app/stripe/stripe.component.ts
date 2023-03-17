@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { async } from '@angular/core/testing';
 import{ loadStripe, Stripe } from '@stripe/stripe-js'
 import { CheckoutService } from './../checkout.service';
+import { Address } from './stripe.model';
 
 @Component({
   selector: 'app-stripe',
@@ -11,10 +11,12 @@ import { CheckoutService } from './../checkout.service';
 export class StripeComponent implements OnInit { 
 
 title = 'stripe-payment';
+address: Address = new Address();
 personName:string = ''
-address:string = ''
+email:string = ''
 success: boolean = false
 failure:boolean = false
+inputError: string = '';
 
 private stripe: Stripe;
 
@@ -32,12 +34,14 @@ async ngOnInit() {
   card.on('change', (event) => {
     const displayError = document.getElementById('card-errors');
     event.error ? displayError.textContent = event.error.message: displayError.textContent='';
+    this.inputError = displayError.textContent
+    console.log("displayError", displayError.textContent)
   });
     const button = document.getElementById('button');
     button.addEventListener('click', async(event)=>{
       event.preventDefault();
       const ownerInfo = {
-        owner: {name: this.personName},
+        owner: {name: this.personName, email: this.email, address: this.address},
         amount: 1000 * 100,
         currency: 'mxn'
       };
